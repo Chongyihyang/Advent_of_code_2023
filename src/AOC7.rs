@@ -1,7 +1,7 @@
 pub mod aoc7_1 {
     use std::cmp::Ordering;
     use std::iter::zip;
-    use crate::{int, range};
+    use crate::{int, str};
     use crate::python_builtins::builtins::read;
 
     pub fn rank_hands(hands: &str) -> u8 {
@@ -64,9 +64,7 @@ pub mod aoc7_1 {
     }
 
     // if card1 == card2, returns true
-    pub fn card1_is_larger (card1: &str, card2: &str) -> bool{
-        let rank = ['A', 'K', 'Q', 'J', 'T', '9',
-                             '8', '7', '6', '5', '4', '3', '2',];
+    pub fn card1_is_larger (card1: &str, card2: &str, rank: &[char]) -> bool{
         for (i, j) in zip(card1.chars(), card2.chars()){
             match rank.iter().position(|x| x == &i).unwrap().cmp(&rank.iter().position(|x| x == &j).unwrap()) {
                 Ordering::Less => {return true}
@@ -77,29 +75,35 @@ pub mod aoc7_1 {
         true
     }
 
-    pub fn main_7_1() {
-        let contents = read("AOC7.txt");
-        let mut contents: Vec<(&str, u32)>= contents.lines().map(|x| {
+    pub fn tmp_mapping(input: String) -> Vec<(String, u32)> {
+        let input: Vec<(String, u32)> = input.lines().map(|x| {
             let tmp: Vec<_> = x.split(' ').collect();
-            (tmp[0], int!(tmp[1], u32))
-            })
-            .collect();
-        contents.sort_by_key(|x| rank_hands(x.0));
+            (str!(tmp[0]), int!(tmp[1], u32))
+        }).collect();
+        input
+    }
 
-        // insertion sort closure
-        let insertion_sort = |mut x: &mut Vec<(&str, u32)>|{
-            for mut i in (1..x.len()){
-                while i > 0 && rank_hands(x[i].0) == rank_hands(x[i-1].0) && card1_is_larger(x[i-1].0, x[i].0) {
-                    x.swap(i, i-1);
-                    i -= 1;
-                }
+    pub fn insertion_sort(x: &mut Vec<(String, u32)>, rank: &[char]){
+        for mut i in 1..x.len(){
+            while i > 0 && rank_hands(&*x[i].0) == rank_hands(&*x[i-1].0) && card1_is_larger(&*x[i-1].0, &*x[i].0, &rank) {
+                x.swap(i, i-1);
+                i -= 1;
             }
-        };
-        insertion_sort(&mut contents);
+        }
+    }
+
+    pub fn main_7_1() {
+        let rank = ['A', 'K', 'Q', 'J', 'T', '9',
+            '8', '7', '6', '5', '4', '3', '2',];
+        let contents = read("AOC7.txt");
+        let mut contents: Vec<(String, u32)> = tmp_mapping(contents);
+        contents.sort_by_key(|x| rank_hands(&*x.0));
+
+        insertion_sort(&mut contents, &rank);
 
         // now we give a rank, and add them up
         let mut total = 0u32;
-        for (rank, &i) in contents.iter().enumerate(){
+        for (rank, &ref i) in contents.iter().enumerate(){
             total += (rank as u32+ 1) * i.1
         }
 
@@ -107,6 +111,7 @@ pub mod aoc7_1 {
     }
 
 }
+
 #[cfg(test)]
 pub mod tests_aoc7_1 {
     use crate::AOC7::aoc7_1::rank_hands;
@@ -131,18 +136,16 @@ pub mod tests_aoc7_1 {
 
     #[test]
     fn card1_is_larger_works() {
-        assert_eq!(card1_is_larger("KTJJT", "KK677"), false);
-        assert_eq!(card1_is_larger("T55J5", "QQQJA"), false);
+        let rank = ['A', 'K', 'Q', 'J', 'T', '9',
+            '8', '7', '6', '5', '4', '3', '2',];
+        assert_eq!(card1_is_larger("KTJJT", "KK677", &rank), false);
+        assert_eq!(card1_is_larger("T55J5", "QQQJA", &rank), false);
     }
 
 }
 
-
 pub mod aoc7_2 {
-    use std::cmp::Ordering;
-    use std::iter::zip;
-    use crate::AOC7::aoc7_1::rank_hands;
-    use crate::int;
+    use crate::AOC7::aoc7_1::{insertion_sort, rank_hands, tmp_mapping};
     use crate::python_builtins::builtins::read;
 
     pub fn rank_hands_2(hands: &str) -> u8 {
@@ -209,43 +212,18 @@ pub mod aoc7_2 {
         }
     }
 
-    // if card1 == card2, returns true
-    pub fn card1_is_larger_2 (card1: &str, card2: &str) -> bool{
+    pub fn main_7_2() {
         let rank = ['A', 'K', 'Q', 'T', '9',
             '8', '7', '6', '5', '4', '3', '2', 'J'];
-        for (i, j) in zip(card1.chars(), card2.chars()){
-            match rank.iter().position(|x| x == &i).unwrap().cmp(&rank.iter().position(|x| x == &j).unwrap()) {
-                Ordering::Less => {return true}
-                Ordering::Equal => {}
-                Ordering::Greater => {return false}
-            }
-        }
-        true
-    }
-
-    pub fn main_7_2() {
         let contents = read("AOC7.txt");
-        let mut contents: Vec<(&str, u32)>= contents.lines().map(|x| {
-            let tmp: Vec<_> = x.split(' ').collect();
-            (tmp[0], int!(tmp[1], u32))
-        })
-            .collect();
-        contents.sort_by_key(|x| rank_hands_2(x.0));
+        let mut contents: Vec<(String, u32)>= tmp_mapping(contents);
+        contents.sort_by_key(|x| rank_hands_2(&*x.0));
 
-        // insertion sort closure
-        let insertion_sort = |mut x: &mut Vec<(&str, u32)>|{
-            for mut i in (1..x.len()){
-                while i > 0 && rank_hands_2(x[i].0) == rank_hands_2(x[i-1].0) && card1_is_larger_2(x[i-1].0, x[i].0) {
-                    x.swap(i, i-1);
-                    i -= 1;
-                }
-            }
-        };
-        insertion_sort(&mut contents);
+        insertion_sort(&mut contents, &rank);
 
         // now we give a rank, and add them up
         let mut total = 0u32;
-        for (rank, &i) in contents.iter().enumerate(){
+        for (rank, &ref i) in contents.iter().enumerate(){
             total += (rank as u32+ 1) * i.1
         }
 
@@ -253,9 +231,10 @@ pub mod aoc7_2 {
     }
 
 }
+
 #[cfg(test)]
 pub mod tests_aoc7_2 {
-    use crate::AOC7::aoc7_2::{card1_is_larger_2, rank_hands_2};
+    use crate::AOC7::aoc7_2::rank_hands_2;
 
     #[test]
     fn rank_hands_works() {
@@ -275,7 +254,6 @@ pub mod tests_aoc7_2 {
         assert_eq!(rank_hands_2("23456"), 1);
         assert_eq!(rank_hands_2("JTTJT"), 7);
         assert_eq!(rank_hands_2("J2J28"), 6);
-        assert_eq!(card1_is_larger_2("QQQJA","J2J28"), true);
     }
 
 }
