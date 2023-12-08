@@ -24,7 +24,7 @@ pub mod aoc1_2{
     use crate::{int, str};
     use crate::python_builtins::builtins::read;
 
-    pub fn check_start(input: &String) -> u8 {
+    fn check_start(input: &String) -> u8 {
         let words = ["one", "two", "three", "four", "five",
             "six", "seven", "eight", "nine"];
         let n = input.len() as u32 - 1;
@@ -50,7 +50,7 @@ pub mod aoc1_2{
         0
     }
 
-    pub fn reverse_string(input: String) -> String{
+    fn reverse_string(input: String) -> String{
         let mut new = str!();
         for char in input.chars().rev(){
             new.push(char)
