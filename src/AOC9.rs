@@ -15,7 +15,7 @@ pub mod aoc9_1{
         tmp
     }
 
-    pub fn main_9_1() {
+    pub fn abstraction(reverse: bool){
         let mut total = 0;
         let contents = read("AOC9.txt");
         let contents: Vec<_> = contents.lines().map(|x| {
@@ -26,50 +26,36 @@ pub mod aoc9_1{
         for mut line in contents{
             let mut tmp_1 = vec![];
             while check_all_0(&line) != true{
-                tmp_1.insert(0, line[line.len() - 1]);
+                if !reverse {
+                    tmp_1.insert(0, line[line.len() - 1]);
+                } else {
+                    tmp_1.insert(0, line[0]);
+                }
                 line = generate_differences(&line)
             }
             // println!("{:?}", tmp_1);
             let mut counter = 0;
             for item in tmp_1{
-                counter += item;
-
+                if !reverse {
+                    counter += item;
+                } else {
+                    counter = item - counter;
+                }
             }
             total += counter;
             // println!("{counter}");
         }
         println!("{total}")
     }
+
+    pub fn main9_1() {
+        abstraction(false)
+    }
 }
 
 pub mod aoc9_2{
-    use crate::AOC9::aoc9_1::{check_all_0, generate_differences};
-    use crate::int;
-    use crate::python_builtins::builtins::read;
-
+    use crate::AOC9::aoc9_1::abstraction;
     pub fn main9_2() {
-        let mut total = 0;
-        let contents = read("AOC9.txt");
-        let contents: Vec<_> = contents.lines().map(|x| {
-            let x = x.trim();
-            let x: Vec<_> = x.split(' ').map(|y| int!(y.trim(), i32)).collect();
-            x
-        }).collect();
-        for mut line in contents{
-            let mut tmp_1 = vec![];
-            while check_all_0(&line) != true{
-                tmp_1.insert(0, line[0]);
-                line = generate_differences(&line)
-            }
-            //println!("{:?}", tmp_1);
-            let mut counter = 0;
-            for item in tmp_1{
-                counter = item - counter;
-
-            }
-            total += counter;
-            //println!("{counter}");
-        }
-        println!("{total}")
+        abstraction(true)
     }
 }
