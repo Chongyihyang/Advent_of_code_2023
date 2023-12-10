@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 num = "0.4.1"
 rayon = "1.8.0"
+time = "0.3.30"

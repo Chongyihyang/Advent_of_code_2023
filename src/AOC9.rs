@@ -6,46 +6,52 @@ pub mod aoc9_1{
         input.iter().all(|x| *x == 0)
     }
 
-    pub fn generate_differences(input: &Vec<i32>) -> Vec<i32> {
+    pub fn generate_differences(input: &Vec<i32>) -> (Vec<i32>, bool) {
         let mut tmp = Vec::new();
+        let mut is_zero = true;
         for counter in (0..input.len() - 1){
             let difference = input[counter + 1] - input[counter];
+            if difference != 0 {
+                is_zero = false
+            }
             tmp.push(difference)
         }
-        tmp
+        (tmp, is_zero)
     }
 
     pub fn abstraction(reverse: bool){
-        let mut total = 0;
         let contents = read("AOC9.txt");
-        let contents: Vec<_> = contents.lines().map(|x| {
-            let x = x.trim();
-            let x: Vec<_> = x.split(' ').map(|y| int!(y.trim(), i32)).collect();
-            x
-        }).collect();
-        for mut line in contents{
-            let mut tmp_1 = vec![];
-            while check_all_0(&line) != true{
-                if !reverse {
-                    tmp_1.insert(0, line[line.len() - 1]);
-                } else {
-                    tmp_1.insert(0, line[0]);
+        let contents: i32 = contents
+            .lines()
+            .map(|x| {
+                let mut counter = 0;
+                let mut pos = true;
+                let mut line = x
+                    .split(' ')
+                    .map(|y| int!(y.trim(), i32))
+                    .collect::<Vec<_>>();
+
+                loop{
+                    let mut is_zero = true;
+                    if !reverse {
+                        counter += line[line.len() - 1];
+                    } else {
+                        if pos{
+                            counter += line[0];
+                            pos = false;
+                        } else {
+                            counter -= line[0];
+                            pos = true;
+                        }
+                    }
+                    (line, is_zero) = generate_differences(&line);
+                    if is_zero{
+                        break
+                    }
                 }
-                line = generate_differences(&line)
-            }
-            // println!("{:?}", tmp_1);
-            let mut counter = 0;
-            for item in tmp_1{
-                if !reverse {
-                    counter += item;
-                } else {
-                    counter = item - counter;
-                }
-            }
-            total += counter;
-            // println!("{counter}");
-        }
-        println!("{total}")
+                counter})
+            .sum();
+        println!("{contents}")
     }
 
     pub fn main9_1() {
