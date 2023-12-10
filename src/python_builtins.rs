@@ -1,11 +1,11 @@
-pub mod builtins{
+pub mod builtins {
     use std::cmp::Ordering;
     use std::fmt::Display;
-    use std::fs::{File, OpenOptions, remove_file};
+    use std::fs::{remove_file, File, OpenOptions};
     use std::io::{Read, Write};
 
     #[macro_export]
-    macro_rules! range{
+    macro_rules! range {
         ($x: expr) => {
             (0..$x)
         };
@@ -17,7 +17,7 @@ pub mod builtins{
         };
         ($x: expr, $y: expr, $z: expr, $sign: expr ) => {
             ($x..$y).step_by($z as usize).rev()
-        }
+        };
     }
 
     #[macro_export]
@@ -36,31 +36,29 @@ pub mod builtins{
         }};
     }
 
-    pub fn write(filename: &str, content: &str, modes: &str){
-        match modes{
+    pub fn write(filename: &str, content: &str, modes: &str) {
+        match modes {
             "w" => {
                 let mut file;
-                match File::open(filename){
+                match File::open(filename) {
                     Ok(..) => {
                         remove_file(filename).expect("could not remove file");
                         file = File::create(filename).unwrap();
-                    },
+                    }
                     Err(..) => {
                         file = File::create(filename).unwrap();
                     }
                 }
-                file.write(content.as_bytes())
-                    .expect("write failed");
-            },
+                file.write(content.as_bytes()).expect("write failed");
+            }
             "a" => {
                 let mut file = OpenOptions::new()
                     .append(true)
                     .open(filename)
                     .expect("cannot open file");
 
-                file.write(content.as_bytes())
-                    .expect("write failed");
-            },
+                file.write(content.as_bytes()).expect("write failed");
+            }
             _ => {}
         }
     }
@@ -71,7 +69,6 @@ pub mod builtins{
         file.read_to_string(&mut contents).unwrap();
         contents
     }
-
 
     #[macro_export]
     macro_rules! len {
@@ -100,17 +97,17 @@ pub mod builtins{
         };
     }
 
-    pub fn ord(some_chr: char) -> u32{
+    pub fn ord(some_chr: char) -> u32 {
         let something = some_chr.clone();
         something as u32
     }
 
-    pub fn chr(some_num: &u8) -> char {
+    pub fn chr(some_num: &u32) -> char {
         let something = some_num.clone();
-        something as char
+        char::from_u32(something).unwrap()
     }
 
-    pub fn search_arr<T: PartialOrd>(lst: &[T], item: &T) -> isize{
+    pub fn search_arr<T: PartialOrd>(lst: &[T], item: &T) -> isize {
         let mut l = 0 as usize;
         let mut r = len!(lst) - 1;
         while l <= r {
@@ -125,7 +122,7 @@ pub mod builtins{
         -1
     }
 
-    pub fn clear_line(){
+    pub fn clear_line() {
         print!("\x1B[2J\x1B[1;1H");
     }
 }
