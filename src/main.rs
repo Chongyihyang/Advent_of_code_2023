@@ -1,6 +1,12 @@
-use crate::AOC10::aoc10_2::main10_2;
+use crate::AOC11::aoc11_1::main11_1;
+
 mod python_builtins;
-mod AOC10;
+mod AOC11;
+
 fn main() {
-    main10_2();
+    use std::time::Instant;
+    let now = Instant::now();
+    main11_1();
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 }
