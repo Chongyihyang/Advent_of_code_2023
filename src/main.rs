@@ -1,4 +1,5 @@
 use crate::AOC11::aoc11_1::main11_1;
+use crate::AOC11::aoc11_2::main11_2;
 
 mod python_builtins;
 mod AOC11;

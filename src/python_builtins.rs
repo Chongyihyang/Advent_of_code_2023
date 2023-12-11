@@ -1,7 +1,11 @@
 pub mod builtins {
+    #[allow(unused_imports)]
     use std::cmp::Ordering;
+    #[allow(unused_imports)]
     use std::fmt::Display;
+    #[allow(unused_imports)]
     use std::fs::{remove_file, File, OpenOptions};
+    #[allow(unused_imports)]
     use std::io::{Read, Write};
 
     #[macro_export]
@@ -36,6 +40,7 @@ pub mod builtins {
         }};
     }
 
+    #[allow(dead_code)]
     pub fn write(filename: &str, content: &str, modes: &str) {
         match modes {
             "w" => {
@@ -63,6 +68,7 @@ pub mod builtins {
         }
     }
 
+    #[allow(dead_code)]
     pub fn read(filename: &str) -> String {
         let mut file = File::open(filename).unwrap();
         let mut contents = String::new();
@@ -96,17 +102,17 @@ pub mod builtins {
             $x.to_string()
         };
     }
-
+    #[allow(dead_code)]
     pub fn ord(some_chr: char) -> u32 {
         let something = some_chr.clone();
         something as u32
     }
-
+    #[allow(dead_code)]
     pub fn chr(some_num: &u32) -> char {
         let something = some_num.clone();
         char::from_u32(something).unwrap()
     }
-
+    #[allow(dead_code)]
     pub fn search_arr<T: PartialOrd>(lst: &[T], item: &T) -> isize {
         let mut l = 0 as usize;
         let mut r = len!(lst) - 1;
@@ -121,7 +127,7 @@ pub mod builtins {
         }
         -1
     }
-
+    #[allow(dead_code)]
     pub fn clear_line() {
         print!("\x1B[2J\x1B[1;1H");
     }
