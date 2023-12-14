@@ -1,14 +1,12 @@
-use crate::AOC14::aoc14_1::main14_1;
-use crate::AOC14::aoc14_2::main14_2;
+use crate::AOC3::aoc3_2::main3_2;
 
 mod python_builtins;
-mod AOC14;
+mod AOC3;
 
 fn main() {
-    // use std::time::Instant;
-    // let now = Instant::now();
-    // main11_1();
-    // let elapsed = now.elapsed();
-    // println!("Elapsed: {:.2?}", elapsed);
-    main14_1();
+    use std::time::Instant;
+    let now = Instant::now();
+    main3_2();
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 }
