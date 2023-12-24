@@ -1,16 +1,12 @@
-use crate::AOC15::aoc15_1::{hash, main15_1};
-use crate::AOC15::aoc15_2::main15_2;
-use crate::AOC16::aoc16_1::main16_1;
-use crate::AOC16::aoc16_2::main16_2;
+use crate::AOC19::aoc19_1::main19_1;
 
+mod AOC19;
 mod python_builtins;
-mod AOC15;
-mod AOC16;
 
 fn main() {
     use std::time::Instant;
     let now = Instant::now();
-    main16_2();
+    main19_1();
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 }

@@ -77,6 +77,13 @@ pub mod builtins {
     }
 
     #[macro_export]
+    macro_rules! to_char {
+        ($x: expr, $y: expr) => {
+            $x.as_bytes()[$y] as char
+        };
+    }
+
+    #[macro_export]
     macro_rules! len {
         ($x: expr) => {
             $x.len()
@@ -86,10 +93,10 @@ pub mod builtins {
     #[macro_export]
     macro_rules! int {
         ($x: expr) => {
-            $x.parse::<i64>().unwrap()
+            $x.parse::<i64>().unwrap_or_else(|x| panic!("{x} is returned"))
         };
         ($x: expr, $y: ident) => {
-            $x.parse::<$y>().unwrap()
+            $x.parse::<$y>().unwrap_or_else(|x| panic!("{x} is returned"))
         };
     }
 
@@ -100,6 +107,9 @@ pub mod builtins {
         };
         ($x: expr) => {
             $x.to_string()
+        };
+        ($x: expr, $y: expr) => {
+            $x.split_at($y).1.to_string()
         };
     }
     #[allow(dead_code)]
