@@ -33,7 +33,7 @@ pub mod builtins {
             new.trim().to_string()
         }};
         ($($arg:tt)*) => {{
-            println!("{}", ($($arg)*));
+            println!("{}", format_args!($($arg)*));
             let mut new = String::new();
             std::io::stdin().read_line(&mut new).unwrap();
             new.trim().to_string()
@@ -109,7 +109,14 @@ pub mod builtins {
             $x.to_string()
         };
         ($x: expr, $y: expr) => {
-            $x.split_at($y).1.to_string()
+            $x.chars().enumerate().filter(|&(i, _)| i < $y ).map(|(_, e)| e).collect::<String>()
+        };
+        ($x: expr, $y: expr, $z: expr) => {
+            if $y > $ z {
+                $x.chars().enumerate().filter(|&(i, _)| {i >= $z && i < $y} ).map(|(_, e)| e).collect::<String>().chars().rev().collect::<String>()
+            } else {
+                $x.chars().enumerate().filter(|&(i, _)| {i >= $y && i < $z} ).map(|(_, e)| e).collect::<String>()
+            }
         };
     }
     #[allow(dead_code)]
@@ -141,7 +148,4 @@ pub mod builtins {
     pub fn clear_line() {
         print!("\x1B[2J\x1B[1;1H");
     }
-
-
 }
-
