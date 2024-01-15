@@ -79,7 +79,7 @@ pub mod builtins {
     #[macro_export]
     macro_rules! to_char {
         ($x: expr, $y: expr) => {
-            $x.as_bytes()[$y] as char
+            $x.chars().nth($y).unwrap()
         };
     }
 
